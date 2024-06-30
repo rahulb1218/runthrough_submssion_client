@@ -11,7 +11,8 @@ const DBSOURCE = "db.sqlite";
 // Configure CORS to allow requests from both localhost and your Heroku app
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://boiling-sea-64676.herokuapp.com'
+  'https://boiling-sea-64676.herokuapp.com',
+  'https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com'
 ];
 
 app.use(cors({
