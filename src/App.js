@@ -13,7 +13,7 @@ const App = () => {
 
   const fetchSubmissions = async () => {
     try {
-      const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submissions');
+      const response = await fetch('http://localhost:3000/submissions');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -31,7 +31,7 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submit', {
+      await fetch('http://localhost:3000/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ const App = () => {
     const password = prompt('Enter password to reset:');
     if (password === 'edifier') {
       try {
-        await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/reset', {
+        await fetch('http://localhost:3000/reset', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -97,7 +97,9 @@ const App = () => {
             <h3>{name}</h3>
             <ul>
               {groupedSubmissions[name] ? groupedSubmissions[name].map((link, index) => (
-                <li key={index}>{link}</li>
+                <li key={index}>
+                  <a href={link} target="_blank" rel="noopener noreferrer">{link}</a>
+                </li>
               )) : <li>No submissions yet</li>}
             </ul>
           </div>
