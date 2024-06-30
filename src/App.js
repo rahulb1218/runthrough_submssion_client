@@ -6,7 +6,7 @@ const App = () => {
   const [submissions, setSubmissions] = useState([]);
 
   const fetchSubmissions = async () => {
-    const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/');
+    const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submssions');
     const result = await response.json();
     setSubmissions(result.data);
   };
