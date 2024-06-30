@@ -6,7 +6,7 @@ const App = () => {
   const [submissions, setSubmissions] = useState([]);
 
   const fetchSubmissions = async () => {
-    const response = await fetch('https://your-backend-url.herokuapp.com/submissions');
+    const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/');
     const result = await response.json();
     setSubmissions(result.data);
   };
@@ -17,7 +17,7 @@ const App = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch('https://your-backend-url.herokuapp.com/submit', {
+    await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
