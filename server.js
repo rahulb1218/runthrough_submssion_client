@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
@@ -6,6 +7,29 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DBSOURCE = "db.sqlite";
+
+// Configure CORS to allow requests from both localhost and your Heroku app
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://boiling-sea-64676.herokuapp.com'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
+app.use(bodyParser.json());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
 
 let db = new sqlite3.Database(DBSOURCE, (err) => {
   if (err) {
@@ -30,11 +54,6 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
     });
   }
 });
-
-app.use(cors({
-  origin: 'https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com'  // Replace with your frontend's origin
-}));
-app.use(bodyParser.json());
 
 app.get('/submissions', (req, res) => {
   const sql = 'SELECT * FROM submissions';
@@ -65,6 +84,11 @@ app.post('/submit', (req, res) => {
       data: { id: this.lastID, dancer, videoLink, timestamp }
     });
   });
+});
+
+// Handle any requests that don't match the API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.listen(PORT, () => {
