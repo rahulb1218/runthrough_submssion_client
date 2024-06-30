@@ -87,6 +87,24 @@ app.post('/submit', (req, res) => {
   });
 });
 
+app.post('/reset', (req, res) => {
+  const { password } = req.body;
+  if (password === 'edifier') {
+    const sql = 'DELETE FROM submissions';
+    db.run(sql, [], function(err) {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: 'success'
+      });
+    });
+  } else {
+    res.status(403).json({ error: 'Incorrect password' });
+  }
+});
+
 // Handle any requests that don't match the API routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
