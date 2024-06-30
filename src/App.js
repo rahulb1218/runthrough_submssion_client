@@ -7,7 +7,7 @@ const App = () => {
 
   const fetchSubmissions = async () => {
     try {
-      const response = await fetch('https://boiling-sea-64676.herokuapp.com/submissions');
+      const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submissions');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -25,7 +25,7 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch('https://boiling-sea-64676.herokuapp.com/submit', {
+      await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
