@@ -6,9 +6,16 @@ const App = () => {
   const [submissions, setSubmissions] = useState([]);
 
   const fetchSubmissions = async () => {
-    const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submssions');
-    const result = await response.json();
-    setSubmissions(result.data);
+    try {
+      const response = await fetch('https://boiling-sea-64676.herokuapp.com/submissions');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const result = await response.json();
+      setSubmissions(result.data);
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+    }
   };
 
   useEffect(() => {
@@ -17,14 +24,18 @@ const App = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ dancer, videoLink }),
-    });
-    fetchSubmissions();
+    try {
+      await fetch('https://boiling-sea-64676.herokuapp.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ dancer, videoLink }),
+      });
+      fetchSubmissions();
+    } catch (error) {
+      console.error('Error submitting video link:', error);
+    }
   };
 
   return (
