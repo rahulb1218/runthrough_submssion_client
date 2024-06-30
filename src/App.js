@@ -75,7 +75,7 @@ const App = () => {
 
   return (
     <div className="app">
-      <h1>Dance Video Submission</h1>
+      <h1>Run Throughs</h1>
       <form className="submission-form" onSubmit={handleSubmit}>
         <select value={dancer} onChange={(e) => setDancer(e.target.value)}>
           {dancerNames.map((name) => (
