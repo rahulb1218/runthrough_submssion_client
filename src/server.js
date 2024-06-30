@@ -31,7 +31,9 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
   }
 });
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com'  // Replace with your frontend's origin
+}));
 app.use(bodyParser.json());
 
 app.get('/submissions', (req, res) => {
