@@ -51,8 +51,9 @@ const App = () => {
         },
         body: JSON.stringify({ dancer, videoLink: formattedVideoLink, assignment_id: selectedAssignment }),
       });
-      fetchSubmissions();
+      fetchSubmissions();  // Fetch submissions again to update the state
       setVideoLink('');
+      setSelectedAssignment('');  // Clear the selected assignment
     } catch (error) {
       console.error('Error submitting video link:', error);
     }
@@ -60,9 +61,9 @@ const App = () => {
 
   const groupedSubmissions = submissions.reduce((acc, submission) => {
     if (!acc[submission.dancer]) {
-      acc[submission.dancer] = [];
+      acc[submission.dancer] = {};
     }
-    acc[submission.dancer].push(submission);
+    acc[submission.dancer][submission.assignment_id] = submission.videoLink;
     return acc;
   }, {});
 
@@ -100,10 +101,10 @@ const App = () => {
                   <h3>{name}</h3>
                   <ul>
                     {assignments.map((assignment) => {
-                      const submission = groupedSubmissions[name]?.find(sub => sub.assignment_id === assignment.id);
+                      const submission = groupedSubmissions[name]?.[assignment.id];
                       return (
                         <li key={assignment.id} style={{ backgroundColor: submission ? 'green' : 'red' }}>
-                          {assignment.name}: {submission ? <a href={submission.videoLink} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
+                          {assignment.name}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
                         </li>
                       );
                     })}

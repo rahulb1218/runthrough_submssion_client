@@ -84,10 +84,10 @@ app.get('/submissions', (req, res) => {
 });
 
 app.post('/submit', (req, res) => {
-  const { dancer, videoLink } = req.body;
+  const { dancer, videoLink, assignment_id } = req.body;
   const timestamp = new Date().toISOString();
-  const sql = 'INSERT INTO submissions (dancer, videoLink, timestamp) VALUES (?,?,?)';
-  const params = [dancer, videoLink, timestamp];
+  const sql = 'INSERT INTO submissions (dancer, videoLink, timestamp, assignment_id) VALUES (?,?,?,?)';
+  const params = [dancer, videoLink, timestamp, assignment_id];
   db.run(sql, params, function(err) {
     if (err) {
       res.status(400).json({ error: err.message });
@@ -95,11 +95,11 @@ app.post('/submit', (req, res) => {
     }
     res.json({
       message: 'success',
-      data: { id: this.lastID, dancer, videoLink, timestamp }
+      data: { id: this.lastID, dancer, videoLink, timestamp, assignment_id }
     });
   });
-
 });
+
 
 app.get('/assignments', (req, res) => {
   const sql = 'SELECT * FROM assignments';
