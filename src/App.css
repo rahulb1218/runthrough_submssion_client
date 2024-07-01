@@ -3,7 +3,7 @@
   text-align: center;
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: '#050003';
+  background-color: #050003;
   color: white;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .dancer-submissions {
-  background-color: #f9f9f9;
+  background-color: #0a0b2f;
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ddd;
@@ -126,4 +126,9 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px; /* Set font size to 16px */
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
 }

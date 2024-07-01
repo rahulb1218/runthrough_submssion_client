@@ -74,6 +74,7 @@ const App = () => {
         <Route path="/" element={
           <div className="app">
             <h1>Run Throughs</h1>
+            <img src="logo.png" alt="Logo" className="logo" />
             <form className="submission-form" onSubmit={handleSubmit}>
               <select value={dancer} onChange={(e) => setDancer(e.target.value)}>
                 {dancerNames.map((name) => (
