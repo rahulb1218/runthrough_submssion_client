@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import AdminConsole from './AdminConsole';
 import './App.css';
 
@@ -58,11 +58,9 @@ const App = () => {
 
   return (
     <Router>
-      <Switch>
-        <Route path="/admin">
-          <AdminConsole />
-        </Route>
-        <Route path="/">
+      <Routes>
+        <Route path="/admin" element={<AdminConsole />} />
+        <Route path="/" element={
           <div className="app">
             <h1>Run Throughs</h1>
             <form className="submission-form" onSubmit={handleSubmit}>
@@ -96,8 +94,8 @@ const App = () => {
             </div>
             <Link to="/admin" className="admin-button">Admin Console</Link>
           </div>
-        </Route>
-      </Switch>
+        } />
+      </Routes>
     </Router>
   );
 };

@@ -1,9 +1,9 @@
 // src/AdminConsole.js
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AdminConsole = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleReset = async () => {
     const password = prompt('Enter password to reset:');
@@ -26,7 +26,7 @@ const AdminConsole = () => {
   };
 
   const handleBack = () => {
-    history.push('/');
+    navigate('/');
   };
 
   return (
