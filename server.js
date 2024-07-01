@@ -85,6 +85,47 @@ app.post('/submit', (req, res) => {
       data: { id: this.lastID, dancer, videoLink, timestamp }
     });
   });
+  db.run(`CREATE TABLE IF NOT EXISTS assignments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT
+  )`);
+  
+  db.run(`CREATE TABLE IF NOT EXISTS submissions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dancer TEXT,
+    videoLink TEXT,
+    timestamp TEXT,
+    assignment_id INTEGER,
+    FOREIGN KEY (assignment_id) REFERENCES assignments(id)
+  )`);
+});
+app.get('/assignments', (req, res) => {
+  const sql = 'SELECT * FROM assignments';
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      data: rows
+    });
+  });
+});
+
+app.post('/assignments', (req, res) => {
+  const { name } = req.body;
+  const sql = 'INSERT INTO assignments (name) VALUES (?)';
+  const params = [name];
+  db.run(sql, params, function(err) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: { id: this.lastID, name }
+    });
+  });
 });
 
 app.post('/reset', (req, res) => {
