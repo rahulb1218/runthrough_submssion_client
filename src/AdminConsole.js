@@ -43,7 +43,7 @@ const AdminConsole = () => {
   };
 
   const handleLogin = () => {
-    if (password === 'your_admin_password') {
+    if (password === 'tamasha') {
       setIsAuthenticated(true);
     } else {
       alert('Incorrect password');
