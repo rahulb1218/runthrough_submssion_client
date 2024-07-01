@@ -38,26 +38,12 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
     throw err;
   } else {
     console.log('Connected to the SQLite database.');
-    // db.run(`CREATE TABLE submissions (
-    //   id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //   dancer TEXT,
-    //   videoLink TEXT,
-    //   timestamp TEXT
-    // )`, (err) => {
-    //   if (err) {
-    //     // Table already created
-    //   } else {
-    //     // Table just created, creating some rows
-    //     const insert = 'INSERT INTO submissions (dancer, videoLink, timestamp) VALUES (?,?,?)';
-    //     db.run(insert, ["Dancer 1", "https://example.com/video1", new Date().toISOString()]);
-    //     db.run(insert, ["Dancer 2", "https://example.com/video2", new Date().toISOString()]);
-    //   }
-    // });
+
     db.run(`CREATE TABLE IF NOT EXISTS assignments (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT
     )`);
-    
+
     db.run(`CREATE TABLE IF NOT EXISTS submissions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       dancer TEXT,
@@ -65,7 +51,13 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
       timestamp TEXT,
       assignment_id INTEGER,
       FOREIGN KEY (assignment_id) REFERENCES assignments(id)
-    )`);
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating submissions table', err.message);
+      } else {
+        console.log('Submissions table created or already exists');
+      }
+    });
   }
 });
 
@@ -99,7 +91,6 @@ app.post('/submit', (req, res) => {
     });
   });
 });
-
 
 app.get('/assignments', (req, res) => {
   const sql = 'SELECT * FROM assignments';
