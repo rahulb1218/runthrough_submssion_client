@@ -3,7 +3,7 @@
   text-align: center;
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #050003;
+  background-color: #050022;
   color: white;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .dancer-submissions {
-  background-color: #04051f;
+  background-color: #09003c;
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ddd;
@@ -129,7 +129,7 @@
 }
 
 .logo {
-  width: 50px;
-  height: 50px;
+  width: 150px;
+  height: 150px;
   margin: 20px;
 }
