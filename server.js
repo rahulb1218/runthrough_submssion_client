@@ -53,6 +53,19 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         db.run(insert, ["Dancer 2", "https://example.com/video2", new Date().toISOString()]);
       }
     });
+    db.run(`CREATE TABLE IF NOT EXISTS assignments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT
+    )`);
+    
+    db.run(`CREATE TABLE IF NOT EXISTS submissions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      dancer TEXT,
+      videoLink TEXT,
+      timestamp TEXT,
+      assignment_id INTEGER,
+      FOREIGN KEY (assignment_id) REFERENCES assignments(id)
+    )`);
   }
 });
 
@@ -85,20 +98,9 @@ app.post('/submit', (req, res) => {
       data: { id: this.lastID, dancer, videoLink, timestamp }
     });
   });
-  db.run(`CREATE TABLE IF NOT EXISTS assignments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT
-  )`);
-  
-  db.run(`CREATE TABLE IF NOT EXISTS submissions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    dancer TEXT,
-    videoLink TEXT,
-    timestamp TEXT,
-    assignment_id INTEGER,
-    FOREIGN KEY (assignment_id) REFERENCES assignments(id)
-  )`);
+
 });
+
 app.get('/assignments', (req, res) => {
   const sql = 'SELECT * FROM assignments';
   db.all(sql, [], (err, rows) => {
