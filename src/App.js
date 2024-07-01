@@ -12,12 +12,13 @@ const App = () => {
   const [dancer, setDancer] = useState(dancerNames[0]);
   const [videoLink, setVideoLink] = useState('');
   const [submissions, setSubmissions] = useState([]);
-  const [assignments, setAssignments] = useState([]);
-  const [selectedAssignment, setSelectedAssignment] = useState('');
 
   const fetchSubmissions = async () => {
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submissions');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
       const result = await response.json();
       setSubmissions(result.data);
     } catch (error) {
@@ -25,19 +26,8 @@ const App = () => {
     }
   };
 
-  const fetchAssignments = async () => {
-    try {
-      const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments');
-      const result = await response.json();
-      setAssignments(result.data);
-    } catch (error) {
-      console.error('Error fetching assignments:', error);
-    }
-  };
-
   useEffect(() => {
     fetchSubmissions();
-    fetchAssignments();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -49,7 +39,7 @@ const App = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ dancer, videoLink: formattedVideoLink, assignment_id: selectedAssignment }),
+        body: JSON.stringify({ dancer, videoLink: formattedVideoLink }),
       });
       fetchSubmissions();
       setVideoLink('');
@@ -62,7 +52,7 @@ const App = () => {
     if (!acc[submission.dancer]) {
       acc[submission.dancer] = [];
     }
-    acc[submission.dancer].push(submission);
+    acc[submission.dancer].push(submission.videoLink);
     return acc;
   }, {});
 
@@ -79,12 +69,6 @@ const App = () => {
                   <option key={name} value={name}>{name}</option>
                 ))}
               </select>
-              <select value={selectedAssignment} onChange={(e) => setSelectedAssignment(e.target.value)}>
-                <option value="">Select Assignment</option>
-                {assignments.map((assignment) => (
-                  <option key={assignment.id} value={assignment.id}>{assignment.name}</option>
-                ))}
-              </select>
               <input
                 type="text"
                 placeholder="Video Link"
@@ -99,14 +83,11 @@ const App = () => {
                 <div key={name} className="dancer-submissions">
                   <h3>{name}</h3>
                   <ul>
-                    {assignments.map((assignment) => {
-                      const submission = groupedSubmissions[name]?.find(sub => sub.assignment_id === assignment.id);
-                      return (
-                        <li key={assignment.id} style={{ backgroundColor: submission ? 'green' : 'red' }}>
-                          {assignment.name}: {submission ? <a href={submission.videoLink} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
-                        </li>
-                      );
-                    })}
+                    {groupedSubmissions[name] ? groupedSubmissions[name].map((link, index) => (
+                      <li key={index}>
+                        <a href={link.startsWith('http://') || link.startsWith('https://') ? link : `https://${link}`} target="_blank" rel="noopener noreferrer">{link}</a>
+                      </li>
+                    )) : <li>No submissions yet</li>}
                   </ul>
                 </div>
               ))}
