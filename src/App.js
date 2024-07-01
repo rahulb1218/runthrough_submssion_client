@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import AdminConsole from './AdminConsole';
 import './App.css';
+import logo from './logo.png';
 
 const dancerNames = [
   'Rahul', 'Angad', 'Avnoor', 'Bahaar', 'Bhajneek', 'Jasjeet', 
@@ -73,8 +74,7 @@ const App = () => {
         <Route path="/admin" element={<AdminConsole />} />
         <Route path="/" element={
           <div className="app">
-            <h1>Run Throughs</h1>
-            <img src="logo.png" alt="Logo" className="logo" />
+            <img src={logo} alt="Logo" className="logo" />
             <form className="submission-form" onSubmit={handleSubmit}>
               <select value={dancer} onChange={(e) => setDancer(e.target.value)}>
                 {dancerNames.map((name) => (
