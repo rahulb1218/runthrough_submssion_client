@@ -123,15 +123,22 @@ app.post('/assignments', (req, res) => {
 
 app.post('/reset', (req, res) => {
   const { password } = req.body;
-  if (password === 'edifier') {
-    const sql = 'DELETE FROM submissions';
-    db.run(sql, [], function(err) {
+  if (password === 'your_reset_password') {
+    const sql1 = 'DELETE FROM submissions';
+    const sql2 = 'DELETE FROM assignments';
+    db.run(sql1, [], function(err) {
       if (err) {
         res.status(400).json({ error: err.message });
         return;
       }
-      res.json({
-        message: 'success'
+      db.run(sql2, [], function(err) {
+        if (err) {
+          res.status(400).json({ error: err.message });
+          return;
+        }
+        res.json({
+          message: 'success'
+        });
       });
     });
   } else {

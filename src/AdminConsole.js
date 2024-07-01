@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 const AdminConsole = () => {
   const [assignments, setAssignments] = useState([]);
   const [newAssignment, setNewAssignment] = useState('');
+  const [password, setPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,24 +42,63 @@ const AdminConsole = () => {
     navigate('/');
   };
 
+  const handleLogin = () => {
+    if (password === 'your_admin_password') {
+      setIsAuthenticated(true);
+    } else {
+      alert('Incorrect password');
+    }
+  };
+
+  const handleReset = async () => {
+    try {
+      await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/reset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: 'your_reset_password' }),
+      });
+      fetchAssignments();
+    } catch (error) {
+      console.error('Error resetting data:', error);
+    }
+  };
+
   return (
     <div className="admin-console">
-      <h1>Admin Console</h1>
-      <div>
-        <input
-          type="text"
-          placeholder="New Assignment"
-          value={newAssignment}
-          onChange={(e) => setNewAssignment(e.target.value)}
-        />
-        <button onClick={handleAddAssignment}>Add Assignment</button>
-      </div>
-      <button onClick={handleBack}>Back to Home</button>
-      <ul>
-        {assignments.map((assignment) => (
-          <li key={assignment.id}>{assignment.name}</li>
-        ))}
-      </ul>
+      {!isAuthenticated ? (
+        <div>
+          <h1>Admin Login</h1>
+          <input
+            type="password"
+            placeholder="Enter Admin Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button onClick={handleLogin}>Login</button>
+        </div>
+      ) : (
+        <div>
+          <h1>Admin Console</h1>
+          <div>
+            <input
+              type="text"
+              placeholder="New Assignment"
+              value={newAssignment}
+              onChange={(e) => setNewAssignment(e.target.value)}
+            />
+            <button onClick={handleAddAssignment}>Add Assignment</button>
+          </div>
+          <button onClick={handleBack}>Back to Home</button>
+          <button onClick={handleReset}>Reset Assignments and Submissions</button>
+          <ul>
+            {assignments.map((assignment) => (
+              <li key={assignment.id}>{assignment.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

@@ -104,3 +104,12 @@
 .admin-console button:hover {
   background-color: #45a049;
 }
+.admin-console input[type="password"] {
+  width: 90%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
