@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import AdminConsole from './AdminConsole';
 import './App.css';
-import logo from './logo.png';
+
 
 const dancerNames = [
   'Rahul', 'Angad', 'Avnoor', 'Bahaar', 'Bhajneek', 'Jasjeet', 
