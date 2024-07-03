@@ -48,6 +48,7 @@ pool.connect((err, client, release) => {
       id SERIAL PRIMARY KEY,
       dancer TEXT,
       videoLink TEXT,
+      assignment TEXT,
       timestamp TIMESTAMP
     );
     CREATE TABLE IF NOT EXISTS assignments (
@@ -75,12 +76,12 @@ app.get('/submissions', async (req, res) => {
 });
 
 app.post('/submit', async (req, res) => {
-  const { dancer, videoLink } = req.body;
+  const { dancer, videoLink, assignment } = req.body;
   const timestamp = new Date().toISOString();
   try {
     const result = await pool.query(
-      'INSERT INTO submissions (dancer, videoLink, timestamp) VALUES ($1, $2, $3) RETURNING *',
-      [dancer, videoLink, timestamp]
+      'INSERT INTO submissions (dancer, videoLink, assignment, timestamp) VALUES ($1, $2, $3, $4) RETURNING *',
+      [dancer, videoLink, assignment, timestamp]
     );
     res.json({ message: 'success', data: result.rows[0] });
   } catch (err) {
@@ -101,7 +102,6 @@ app.get('/assignments', async (req, res) => {
 
 app.post('/assignments', async (req, res) => {
   const { assignment } = req.body;
-  console.log('Received assignment:', assignment); // Log the assignment name
   const timestamp = new Date().toISOString();
   try {
     const result = await pool.query(

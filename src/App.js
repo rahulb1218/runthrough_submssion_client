@@ -55,7 +55,7 @@ const App = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ dancer, videoLink: formattedVideoLink, assignment_id: selectedAssignment }),
+        body: JSON.stringify({ dancer, videoLink: formattedVideoLink, assignment: selectedAssignment }),
       });
       console.log('Video link submitted successfully');
       fetchSubmissions(); // Fetch submissions again to update the state
@@ -69,9 +69,9 @@ const App = () => {
   const groupedSubmissions = submissions.reduce((acc, submission) => {
     console.log('Processing submission:', submission); // Log each submission object
     if (!acc[submission.dancer]) {
-      acc[submission.dancer] = [];
+      acc[submission.dancer] = {};
     }
-    acc[submission.dancer].push(submission);
+    acc[submission.dancer][submission.assignment] = submission.videoLink;
     return acc;
   }, {});
 
@@ -93,7 +93,7 @@ const App = () => {
               <select value={selectedAssignment} onChange={(e) => setSelectedAssignment(e.target.value)}>
                 <option value="">Select Assignment</option>
                 {assignments.map((assignment) => (
-                  <option key={assignment.id} value={assignment.id}>{assignment.assignment}</option>
+                  <option key={assignment.assignment} value={assignment.assignment}>{assignment.assignment}</option>
                 ))}
               </select>
               <input
@@ -111,11 +111,11 @@ const App = () => {
                   <h3>{name}</h3>
                   <ul>
                     {assignments.map((assignment) => {
-                      const submission = groupedSubmissions[name]?.find(sub => sub.id === assignment.id);
-                      console.log(`Submission for ${name}, assignment ${assignment.id}:`, submission);
+                      const submission = groupedSubmissions[name]?.[assignment.assignment];
+                      console.log(`Submission for ${name}, assignment ${assignment.assignment}:`, submission);
                       return (
-                        <li key={assignment.id} style={{ backgroundColor: submission ? 'green' : 'red' }}>
-                          {assignment.assignment}: {submission ? <a href={submission.videoLink} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
+                        <li key={assignment.assignment} style={{ backgroundColor: submission ? 'green' : 'red' }}>
+                          {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
                         </li>
                       );
                     })}

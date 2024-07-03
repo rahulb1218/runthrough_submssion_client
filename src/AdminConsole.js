@@ -13,16 +13,19 @@ const AdminConsole = () => {
   }, []);
 
   const fetchAssignments = async () => {
+    console.log('Fetching assignments in AdminConsole...');
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments');
       const result = await response.json();
+      console.log('Assignments fetched in AdminConsole:', result.data);
       setAssignments(result.data);
     } catch (error) {
-      console.error('Error fetching assignments:', error);
+      console.error('Error fetching assignments in AdminConsole:', error);
     }
   };
 
   const handleAddAssignment = async () => {
+    console.log('Adding new assignment:', newAssignment);
     try {
       await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments', {
         method: 'POST',
@@ -51,6 +54,7 @@ const AdminConsole = () => {
   };
 
   const handleReset = async () => {
+    console.log('Resetting assignments and submissions');
     try {
       await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/reset', {
         method: 'POST',
@@ -94,7 +98,7 @@ const AdminConsole = () => {
           <button onClick={handleReset}>Reset Assignments and Submissions</button>
           <ul>
             {assignments.map((assignment) => (
-              <li key={assignment.id}>{assignment.assignment}</li>
+              <li key={assignment.assignment}>{assignment.assignment}</li>
             ))}
           </ul>
         </div>
