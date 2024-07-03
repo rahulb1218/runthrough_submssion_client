@@ -113,6 +113,7 @@ const App = () => {
                     {assignments.map((assignment) => {
                       const submission = groupedSubmissions[name]?.[assignment.assignment];
                       console.log(`Submission for ${name}, assignment ${assignment.assignment}:`, submission);
+                      console.log('Submission:', groupedSubmissions)
                       return (
                         <li key={assignment.assignment} style={{ backgroundColor: submission ? 'green' : 'red' }}>
                           {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
