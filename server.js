@@ -49,7 +49,12 @@ pool.connect((err, client, release) => {
       dancer TEXT,
       videoLink TEXT,
       timestamp TIMESTAMP
-    )
+    );
+    CREATE TABLE IF NOT EXISTS assignments (
+      id SERIAL PRIMARY KEY,
+      assignment TEXT,
+      timestamp TIMESTAMP
+    );
   `, (err) => {
     release();
     if (err) {
@@ -57,21 +62,6 @@ pool.connect((err, client, release) => {
     }
     console.log('Connected to the PostgreSQL database.');
   });
-});
-
-// Define the assignments route
-app.post('/assignments', async (req, res) => {
-  const { assignment } = req.body;
-  try {
-    const result = await pool.query(
-      'INSERT INTO assignments (assignment) VALUES ($1) RETURNING *',
-      [assignment]
-    );
-    res.json({ message: 'success', data: result.rows[0] });
-  } catch (err) {
-    console.error('Error adding assignment:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
 });
 
 app.get('/submissions', async (req, res) => {
@@ -95,6 +85,21 @@ app.post('/submit', async (req, res) => {
     res.json({ message: 'success', data: result.rows[0] });
   } catch (err) {
     console.error('Error submitting video link:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/assignments', async (req, res) => {
+  const { assignment } = req.body;
+  const timestamp = new Date().toISOString();
+  try {
+    const result = await pool.query(
+      'INSERT INTO assignments (assignment, timestamp) VALUES ($1, $2) RETURNING *',
+      [assignment, timestamp]
+    );
+    res.json({ message: 'success', data: result.rows[0] });
+  } catch (err) {
+    console.error('Error adding assignment:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
