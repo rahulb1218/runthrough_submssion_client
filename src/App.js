@@ -64,6 +64,7 @@ const App = () => {
       acc[submission.dancer] = {};
     }
     acc[submission.dancer][submission.assignment_id] = submission.videoLink;
+    console.log(acc);
     return acc;
   }, {});
 
@@ -103,7 +104,6 @@ const App = () => {
                     {assignments.map((assignment) => {
                       const submission = groupedSubmissions[name]?.[assignment.id];
                       console.log(name);
-                      console.log(groupedSubmissions);
                       return (
                         <li key={assignment.id} style={{ backgroundColor: submission ? 'green' : 'red' }}>
                           {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
