@@ -67,11 +67,11 @@ const App = () => {
   };
 
   const groupedSubmissions = submissions.reduce((acc, submission) => {
-    console.log('Processing submission:', submission);
+    console.log('Processing submission:', submission); // Log each submission object
     if (!acc[submission.dancer]) {
-      acc[submission.dancer] = {};
+      acc[submission.dancer] = [];
     }
-    acc[submission.dancer][submission.assignment_id] = submission.videoLink;
+    acc[submission.dancer].push(submission);
     return acc;
   }, {});
 
@@ -111,11 +111,11 @@ const App = () => {
                   <h3>{name}</h3>
                   <ul>
                     {assignments.map((assignment) => {
-                      const submission = groupedSubmissions[name]?.[assignment.id];
+                      const submission = groupedSubmissions[name]?.find(sub => sub.id === assignment.id);
                       console.log(`Submission for ${name}, assignment ${assignment.id}:`, submission);
                       return (
                         <li key={assignment.id} style={{ backgroundColor: submission ? 'green' : 'red' }}>
-                          {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
+                          {assignment.assignment}: {submission ? <a href={submission.videoLink} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
                         </li>
                       );
                     })}
