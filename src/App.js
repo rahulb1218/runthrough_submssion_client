@@ -32,7 +32,7 @@ const App = () => {
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments');
       const result = await response.json();
-      console.log('Assignments fetched:', result.data);
+      console.log('Assignmendts fetched:', result.data);
       setAssignments(result.data);
     } catch (error) {
       console.error('Error fetching assignments:', error);
