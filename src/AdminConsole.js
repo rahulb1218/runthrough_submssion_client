@@ -29,7 +29,7 @@ const AdminConsole = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: newAssignment }),
+        body: JSON.stringify({ assignment: newAssignment }), // Change 'name' to 'assignment'
       });
       setNewAssignment('');
       fetchAssignments();
