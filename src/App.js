@@ -16,9 +16,11 @@ const App = () => {
   const [selectedAssignment, setSelectedAssignment] = useState('');
 
   const fetchSubmissions = async () => {
+    console.log('Fetching submissions...');
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submissions');
       const result = await response.json();
+      console.log('Submissions fetched:', result.data);
       setSubmissions(result.data);
     } catch (error) {
       console.error('Error fetching submissions:', error);
@@ -26,9 +28,11 @@ const App = () => {
   };
 
   const fetchAssignments = async () => {
+    console.log('Fetching assignments...');
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments');
       const result = await response.json();
+      console.log('Assignments fetched:', result.data);
       setAssignments(result.data);
     } catch (error) {
       console.error('Error fetching assignments:', error);
@@ -36,12 +40,14 @@ const App = () => {
   };
 
   useEffect(() => {
+    console.log('useEffect - fetching data');
     fetchSubmissions();
     fetchAssignments();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Submitting video link:', videoLink, 'for dancer:', dancer, 'and assignment:', selectedAssignment);
     const formattedVideoLink = videoLink.startsWith('http://') || videoLink.startsWith('https://') ? videoLink : `https://${videoLink}`;
     try {
       await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submit', {
@@ -51,6 +57,7 @@ const App = () => {
         },
         body: JSON.stringify({ dancer, videoLink: formattedVideoLink, assignment_id: selectedAssignment }),
       });
+      console.log('Video link submitted successfully');
       fetchSubmissions(); // Fetch submissions again to update the state
       setVideoLink('');
       setSelectedAssignment(''); // Clear the selected assignment
@@ -66,6 +73,8 @@ const App = () => {
     acc[submission.dancer][submission.assignment_id] = submission.videoLink;
     return acc;
   }, {});
+
+  console.log('Grouped Submissions:', groupedSubmissions);
 
   return (
     <Router>
@@ -102,6 +111,7 @@ const App = () => {
                   <ul>
                     {assignments.map((assignment) => {
                       const submission = groupedSubmissions[name]?.[assignment.id];
+                      console.log(`Submission for ${name}, assignment ${assignment.id}:`, submission);
                       return (
                         <li key={assignment.id} style={{ backgroundColor: submission ? 'green' : 'red' }}>
                           {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
