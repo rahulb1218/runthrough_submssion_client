@@ -10,7 +10,7 @@ const dancerNames = [
 
 const App = () => {
   const [dancer, setDancer] = useState(dancerNames[0]);
-  const [videoLink, setVideoLink] = useState('');
+  const [videolink, setVideoLink] = useState('');
   const [submissions, setSubmissions] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [selectedAssignment, setSelectedAssignment] = useState('');
@@ -47,15 +47,15 @@ const App = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting video link:', videoLink, 'for dancer:', dancer, 'and assignment:', selectedAssignment);
-    const formattedVideoLink = videoLink.startsWith('http://') || videoLink.startsWith('https://') ? videoLink : `https://${videoLink}`;
+    console.log('Submitting video link:', videolink, 'for dancer:', dancer, 'and assignment:', selectedAssignment);
+    const formattedVideoLink = videolink.startsWith('http://') || videolink.startsWith('https://') ? videolink : `https://${videolink}`;
     try {
       await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ dancer, videoLink: formattedVideoLink, assignment: selectedAssignment }),
+        body: JSON.stringify({ dancer, videolink: formattedVideoLink, assignment: selectedAssignment }),
       });
       console.log('Video link submitted successfully');
       fetchSubmissions(); // Fetch submissions again to update the state
@@ -72,7 +72,7 @@ const App = () => {
       acc[submission.dancer] = {};
     }
     console.log('video link:', submission.videolink);
-    acc[submission.dancer][submission.assignment] = submission.videoLink;
+    acc[submission.dancer][submission.assignment] = submission.videolink;
     return acc;
   }, {});
 
@@ -100,7 +100,7 @@ const App = () => {
               <input
                 type="text"
                 placeholder="Video Link"
-                value={videoLink}
+                value={videolink}
                 onChange={(e) => setVideoLink(e.target.value)}
               />
               <button type="submit">Submit</button>
