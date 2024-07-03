@@ -88,7 +88,15 @@ app.post('/submit', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
+app.get('/assignments', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM assignments');
+    res.json({ data: result.rows });
+  } catch (err) {
+    console.error('Error fetching assignments:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 app.post('/assignments', async (req, res) => {
   const { assignment } = req.body;
   const timestamp = new Date().toISOString();
