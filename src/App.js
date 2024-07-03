@@ -105,7 +105,7 @@ const App = () => {
                       const submission = groupedSubmissions[name]?.[assignment.id];
                       return (
                         <li key={assignment.id} style={{ backgroundColor: submission ? 'green' : 'red' }}>
-                          {assignment.name}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
+                          {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
                         </li>
                       );
                     })}
