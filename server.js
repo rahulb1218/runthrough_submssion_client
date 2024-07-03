@@ -2,17 +2,15 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
+const { Pool } = require('pg');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DBSOURCE = "db.sqlite";
 
 // Configure CORS to allow requests from both localhost and your Heroku app
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://boiling-sea-64676.herokuapp.com',
-  'https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com'
+  'https://boiling-sea-64676.herokuapp.com'
 ];
 
 app.use(cors({
@@ -29,118 +27,66 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'build')));
-
-let db = new sqlite3.Database(DBSOURCE, (err) => {
-  if (err) {
-    console.error(err.message);
-    throw err;
-  } else {
-    console.log('Connected to the SQLite database.');
-
-    db.run(`CREATE TABLE IF NOT EXISTS assignments (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT
-    )`);
-
-    db.run(`CREATE TABLE IF NOT EXISTS submissions (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      dancer TEXT,
-      videoLink TEXT,
-      timestamp TEXT,
-      assignment_id INTEGER,
-      FOREIGN KEY (assignment_id) REFERENCES assignments(id)
-    )`, (err) => {
-      if (err) {
-        console.error('Error creating submissions table', err.message);
-      } else {
-        console.log('Submissions table created or already exists');
-      }
-    });
+// Database connection
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
   }
 });
 
-app.get('/submissions', (req, res) => {
-  const sql = 'SELECT * FROM submissions';
-  const params = [];
-  db.all(sql, params, (err, rows) => {
+pool.connect((err, client, release) => {
+  if (err) {
+    return console.error('Error acquiring client', err.stack);
+  }
+  client.query(`
+    CREATE TABLE IF NOT EXISTS submissions (
+      id SERIAL PRIMARY KEY,
+      dancer TEXT,
+      videoLink TEXT,
+      timestamp TIMESTAMP
+    )
+  `, (err) => {
+    release();
     if (err) {
-      res.status(400).json({ error: err.message });
-      return;
+      return console.error('Error executing query', err.stack);
     }
-    res.json({
-      data: rows
-    });
+    console.log('Connected to the PostgreSQL database.');
   });
 });
 
-app.post('/submit', (req, res) => {
-  const { dancer, videoLink, assignment_id } = req.body;
+app.get('/submissions', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM submissions');
+    res.json({ data: result.rows });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/submit', async (req, res) => {
+  const { dancer, videoLink } = req.body;
   const timestamp = new Date().toISOString();
-  const sql = 'INSERT INTO submissions (dancer, videoLink, timestamp, assignment_id) VALUES (?,?,?,?)';
-  const params = [dancer, videoLink, timestamp, assignment_id];
-  db.run(sql, params, function(err) {
-    if (err) {
-      res.status(400).json({ error: err.message });
-      return;
-    }
-    res.json({
-      message: 'success',
-      data: { id: this.lastID, dancer, videoLink, timestamp, assignment_id }
-    });
-  });
+  try {
+    const result = await pool.query(
+      'INSERT INTO submissions (dancer, videoLink, timestamp) VALUES ($1, $2, $3) RETURNING *',
+      [dancer, videoLink, timestamp]
+    );
+    res.json({ message: 'success', data: result.rows[0] });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
-app.get('/assignments', (req, res) => {
-  const sql = 'SELECT * FROM assignments';
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      res.status(400).json({ error: err.message });
-      return;
-    }
-    res.json({
-      data: rows
-    });
-  });
-});
-
-app.post('/assignments', (req, res) => {
-  const { name } = req.body;
-  const sql = 'INSERT INTO assignments (name) VALUES (?)';
-  const params = [name];
-  db.run(sql, params, function(err) {
-    if (err) {
-      res.status(400).json({ error: err.message });
-      return;
-    }
-    res.json({
-      message: 'success',
-      data: { id: this.lastID, name }
-    });
-  });
-});
-
-app.post('/reset', (req, res) => {
+app.post('/reset', async (req, res) => {
   const { password } = req.body;
-  if (password === 'your_reset_password') {
-    const sql1 = 'DELETE FROM submissions';
-    const sql2 = 'DELETE FROM assignments';
-    db.run(sql1, [], function(err) {
-      if (err) {
-        res.status(400).json({ error: err.message });
-        return;
-      }
-      db.run(sql2, [], function(err) {
-        if (err) {
-          res.status(400).json({ error: err.message });
-          return;
-        }
-        res.json({
-          message: 'success'
-        });
-      });
-    });
+  if (password === 'edifier') {
+    try {
+      await pool.query('DELETE FROM submissions');
+      res.json({ message: 'success' });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
   } else {
     res.status(403).json({ error: 'Incorrect password' });
   }
