@@ -71,7 +71,7 @@ const App = () => {
     if (!acc[submission.dancer]) {
       acc[submission.dancer] = {};
     }
-    console.log('video link:', submission.videoLink);
+    console.log('video link:', submission.videolink);
     acc[submission.dancer][submission.assignment] = submission.videoLink;
     return acc;
   }, {});
