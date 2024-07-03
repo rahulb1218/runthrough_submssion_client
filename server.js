@@ -59,12 +59,28 @@ pool.connect((err, client, release) => {
   });
 });
 
+// Define the assignments route
+app.post('/assignments', async (req, res) => {
+  const { assignment } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO assignments (assignment) VALUES ($1) RETURNING *',
+      [assignment]
+    );
+    res.json({ message: 'success', data: result.rows[0] });
+  } catch (err) {
+    console.error('Error adding assignment:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.get('/submissions', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM submissions');
     res.json({ data: result.rows });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error('Error fetching submissions:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -78,7 +94,8 @@ app.post('/submit', async (req, res) => {
     );
     res.json({ message: 'success', data: result.rows[0] });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error('Error submitting video link:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -89,7 +106,7 @@ app.post('/reset', async (req, res) => {
       await pool.query('DELETE FROM submissions');
       res.json({ message: 'success' });
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   } else {
     res.status(403).json({ error: 'Incorrect password' });
