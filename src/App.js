@@ -84,7 +84,7 @@ const App = () => {
               <select value={selectedAssignment} onChange={(e) => setSelectedAssignment(e.target.value)}>
                 <option value="">Select Assignment</option>
                 {assignments.map((assignment) => (
-                  <option key={assignment.id} value={assignment.id}>{assignment.name}</option>
+                  <option key={assignment.id} value={assignment.id}>{assignment.assignment}</option>
                 ))}
               </select>
               <input
