@@ -114,16 +114,14 @@ app.post('/assignments', async (req, res) => {
 
 app.post('/reset', async (req, res) => {
   const { password } = req.body;
-  if (password === 'tamasha') {
-    try {
-      await pool.query('DELETE FROM submissions');
-      res.json({ message: 'success' });
-    } catch (err) {
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  } else {
-    res.status(403).json({ error: 'Incorrect password' });
+
+  try {
+    await pool.query('DELETE FROM submissions');
+    res.json({ message: 'success' });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal Server Error' });
   }
+  
 });
 
 // Catch-all handler to serve React's index.html for any unknown routes
