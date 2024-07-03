@@ -67,6 +67,7 @@ const App = () => {
   };
 
   const groupedSubmissions = submissions.reduce((acc, submission) => {
+    console.log('Processing submission:', submission);
     if (!acc[submission.dancer]) {
       acc[submission.dancer] = {};
     }
