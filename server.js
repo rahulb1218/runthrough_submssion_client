@@ -47,7 +47,7 @@ pool.connect((err, client, release) => {
     CREATE TABLE IF NOT EXISTS submissions (
       id SERIAL PRIMARY KEY,
       dancer TEXT,
-      videoLink TEXT,
+      videolink TEXT,
       assignment TEXT,
       timestamp TIMESTAMP
     );
@@ -76,12 +76,12 @@ app.get('/submissions', async (req, res) => {
 });
 
 app.post('/submit', async (req, res) => {
-  const { dancer, videoLink, assignment } = req.body;
+  const { dancer, videolink, assignment } = req.body;
   const timestamp = new Date().toISOString();
   try {
     const result = await pool.query(
-      'INSERT INTO submissions (dancer, videoLink, assignment, timestamp) VALUES ($1, $2, $3, $4) RETURNING *',
-      [dancer, videoLink, assignment, timestamp]
+      'INSERT INTO submissions (dancer, videolink, assignment, timestamp) VALUES ($1, $2, $3, $4) RETURNING *',
+      [dancer, videolink, assignment, timestamp]
     );
     res.json({ message: 'success', data: result.rows[0] });
   } catch (err) {
