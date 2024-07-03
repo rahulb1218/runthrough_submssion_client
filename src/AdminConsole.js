@@ -13,7 +13,7 @@ const AdminConsole = () => {
   }, []);
 
   const fetchAssignments = async () => {
-    console.log('Fetching assignments in AdminConsole...');
+    console.log('Fetching assignment in AdminConsole...');
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments');
       const result = await response.json();
