@@ -114,7 +114,7 @@ app.post('/assignments', async (req, res) => {
 
 app.post('/reset', async (req, res) => {
   const { password } = req.body;
-  if (password === 'edifier') {
+  if (password === 'tamasha') {
     try {
       await pool.query('DELETE FROM submissions');
       res.json({ message: 'success' });
