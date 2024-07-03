@@ -88,6 +88,7 @@ app.post('/submit', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 app.get('/assignments', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM assignments');
@@ -97,8 +98,10 @@ app.get('/assignments', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 app.post('/assignments', async (req, res) => {
   const { assignment } = req.body;
+  console.log('Received assignment:', assignment); // Log the assignment name
   const timestamp = new Date().toISOString();
   try {
     const result = await pool.query(
@@ -113,21 +116,13 @@ app.post('/assignments', async (req, res) => {
 });
 
 app.post('/reset', async (req, res) => {
-  const { password } = req.body;
-
   try {
     await pool.query('DELETE FROM submissions');
-    res.json({ message: 'success' });
-  } catch (err) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-  try {
     await pool.query('DELETE FROM assignments');
     res.json({ message: 'success' });
   } catch (err) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
-  
 });
 
 // Catch-all handler to serve React's index.html for any unknown routes
