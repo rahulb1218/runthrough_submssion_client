@@ -94,7 +94,7 @@ const AdminConsole = () => {
           <button onClick={handleReset}>Reset Assignments and Submissions</button>
           <ul>
             {assignments.map((assignment) => (
-              <li key={assignment.id}>{assignment.name}</li>
+              <li key={assignment.id}>{assignment.assignment}</li>
             ))}
           </ul>
         </div>
