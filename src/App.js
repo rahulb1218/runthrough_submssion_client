@@ -3,9 +3,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import AdminConsole from './AdminConsole';
 import './App.css';
 
-
 const dancerNames = [
-  'Rahul', 'Angad', 'Avnoor', 'Bahaar', 'Bhajneek', 'Jasjeet', 
+  'Rahul', 'Angad', 'Avnoor', 'Bahaar', 'Bhajneek', 'Jasjeet',
   'Karan S.', 'Meher', 'Omid', 'Palk', 'Rhea', 'Karan T.', 'Simran', 'Tanvi'
 ];
 
@@ -52,9 +51,9 @@ const App = () => {
         },
         body: JSON.stringify({ dancer, videoLink: formattedVideoLink, assignment_id: selectedAssignment }),
       });
-      fetchSubmissions();  // Fetch submissions again to update the state
+      fetchSubmissions(); // Fetch submissions again to update the state
       setVideoLink('');
-      setSelectedAssignment('');  // Clear the selected assignment
+      setSelectedAssignment(''); // Clear the selected assignment
     } catch (error) {
       console.error('Error submitting video link:', error);
     }
@@ -102,7 +101,7 @@ const App = () => {
                   <h3>{name}</h3>
                   <ul>
                     {assignments.map((assignment) => {
-                      const submission = groupedSubmissions[assignment]?.[assignment.id];
+                      const submission = groupedSubmissions[name]?.[assignment.id];
                       return (
                         <li key={assignment.id} style={{ backgroundColor: submission ? 'green' : 'red' }}>
                           {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
