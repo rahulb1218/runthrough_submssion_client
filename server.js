@@ -27,6 +27,9 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
+
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -92,7 +95,7 @@ app.post('/reset', async (req, res) => {
   }
 });
 
-// Handle any requests that don't match the API routes
+// Catch-all handler to serve React's index.html for any unknown routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
