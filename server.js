@@ -121,6 +121,12 @@ app.post('/reset', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
+  try {
+    await pool.query('DELETE FROM assignments');
+    res.json({ message: 'success' });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
   
 });
 
