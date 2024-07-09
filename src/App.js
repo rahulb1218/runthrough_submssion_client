@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import AdminConsole from './AdminConsole';
 import './App.css';
+import VideoEmbed from './VideoEmbed';
+
 
 const dancerNames = [
   'Rahul', 'Angad', 'Avnoor', 'Bahaar', 'Bhajneek', 'Jasjeet',
@@ -81,6 +83,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/embed/:videoLink" element={<VideoEmbed />} />
         <Route path="/admin" element={<AdminConsole />} />
         <Route path="/" element={
           <div className="app">
@@ -112,16 +115,22 @@ const App = () => {
                 <div key={name} className="dancer-submissions">
                   <h3>{name}</h3>
                   <ul>
-                    {assignments.map((assignment) => {
-                      const submission = groupedSubmissions[name]?.[assignment.assignment];
-                      // console.log(`Submission for ${name}, assignment ${assignment.assignment}:`, submission);
-                      // console.log('Submission:', groupedSubmissions)
-                      return (
-                        <li key={assignment.assignment} style={{ backgroundColor: submission ? 'green' : 'red' }}>
-                          {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
-                        </li>
-                      );
-                    })}
+                  {assignments.map((assignment) => {
+                    const submission = groupedSubmissions[name]?.[assignment.assignment];
+                    console.log(`Submission for ${name}, assignment ${assignment.assignment}:`, submission);
+                    return (
+                      <li key={assignment.assignment} style={{ backgroundColor: submission ? 'green' : 'red' }}>
+                      {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
+                      {submission && (
+                        <>
+                        {' | '}
+                        <Link to={`/embed/${encodeURIComponent(submission)}`}>View</Link>
+                        </>
+                      )}
+                      </li>
+                    );
+                  })}
+
                   </ul>
                 </div>
               ))}

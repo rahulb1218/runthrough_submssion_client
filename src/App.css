@@ -133,3 +133,15 @@
   height: 150px;
   margin: 20px;
 }
+.li {
+  text-align: left;
+}
+.video-embed {
+  text-align: center;
+  margin: 20px;
+}
+
+.video-embed iframe {
+  max-width: 100%;
+  height: auto;
+}
