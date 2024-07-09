@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 const VideoEmbed = () => {
   const { videoLink } = useParams();
   const decodedVideoLink = decodeURIComponent(videoLink);
-  const [notes, setNotes] = useState([]);
-  const [noteText, setNoteText] = useState('');
+  const [critiques, setCritiques] = useState([]);
+  const [critiqueText, setCritiqueText] = useState('');
   const playerRef = useRef(null);
 
   const getVideoId = (url) => {
@@ -43,25 +43,41 @@ const VideoEmbed = () => {
       // Player is ready
     }
 
-    fetchNotes();
+    fetchCritiques();
   }, [videoId]);
 
-  const handleAddNote = async () => {
+  const handleAddCritique = async () => {
     const currentTime = playerRef.current.getCurrentTime();
-    const newNote = { text: noteText, time: currentTime };
-    setNotes([...notes, newNote]);
-    setNoteText('');
+    const newCritique = { text: critiqueText, time: currentTime };
+    setCritiques([...critiques, newCritique]);
+    setCritiqueText('');
 
     try {
-      await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/addNote', {
+      await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/addCritique', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoLink: decodedVideoLink, note: noteText, time: currentTime }),
+        body: JSON.stringify({ videoLink: decodedVideoLink, critique: critiqueText, time: currentTime }),
       });
     } catch (error) {
-      console.error('Error adding note:', error);
+      console.error('Error adding critique:', error);
+    }
+  };
+
+  const handleDeleteCritique = async (index) => {
+    const critiqueToDelete = critiques[index];
+    try {
+      await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/deleteCritique', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ videoLink: decodedVideoLink, time: critiqueToDelete.time }),
+      });
+      setCritiques(critiques.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error('Error deleting critique:', error);
     }
   };
 
@@ -70,13 +86,13 @@ const VideoEmbed = () => {
     playerRef.current.playVideo();
   };
 
-  const fetchNotes = async () => {
+  const fetchCritiques = async () => {
     try {
-      const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/notes?videoLink=${encodeURIComponent(decodedVideoLink)}`);
+      const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/critiques?videoLink=${encodeURIComponent(decodedVideoLink)}`);
       const result = await response.json();
-      setNotes(result.data);
+      setCritiques(result.data);
     } catch (error) {
-      console.error('Error fetching notes:', error);
+      console.error('Error fetching critiques:', error);
     }
   };
 
@@ -84,21 +100,22 @@ const VideoEmbed = () => {
     <div className="video-embed">
       <h2>Video Submission</h2>
       <div id="youtube-player"></div>
-      <div className="notes-section">
+      <div className="critiques-section">
         <input
           type="text"
-          placeholder="Add a note"
-          value={noteText}
-          onChange={(e) => setNoteText(e.target.value)}
+          placeholder="Add a critique"
+          value={critiqueText}
+          onChange={(e) => setCritiqueText(e.target.value)}
         />
-        <button onClick={handleAddNote}>Add Note</button>
+        <button onClick={handleAddCritique}>Add Critique</button>
         <ul>
-          {notes.map((note, index) => (
+          {critiques.map((critique, index) => (
             <li key={index}>
-              <span onClick={() => handleTimeClick(note.time)}>
-                {note.time !== undefined ? new Date(note.time * 1000).toISOString().substr(11, 8) : 'Invalid Time'}
+              <span onClick={() => handleTimeClick(critique.time)}>
+                {critique.time !== undefined ? new Date(critique.time * 1000).toISOString().substr(11, 8) : 'Invalid Time'}
               </span>
-              : {note.text}
+              : {critique.text}
+              <button onClick={() => handleDeleteCritique(index)}>Delete</button>
             </li>
           ))}
         </ul>

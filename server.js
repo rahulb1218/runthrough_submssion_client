@@ -56,13 +56,14 @@ pool.connect((err, client, release) => {
       assignment TEXT,
       timestamp TIMESTAMP
     );
-    CREATE TABLE IF NOT EXISTS notes (
+    CREATE TABLE IF NOT EXISTS critiques (
       id SERIAL PRIMARY KEY,
       videoLink TEXT,
-      note TEXT,
+      critique TEXT,
       time FLOAT,
       timestamp TIMESTAMP
     );
+
 
   `, (err) => {
     release();
@@ -123,31 +124,43 @@ app.post('/assignments', async (req, res) => {
   }
 });
 
-app.post('/addNote', async (req, res) => {
-  const { videoLink, note, time } = req.body;
+app.post('/addCritique', async (req, res) => {
+  const { videoLink, critique, time } = req.body;
   const timestamp = new Date().toISOString();
   try {
     const result = await pool.query(
-      'INSERT INTO notes (videoLink, note, time, timestamp) VALUES ($1, $2, $3, $4) RETURNING *',
-      [videoLink, note, time, timestamp]
+      'INSERT INTO critiques (videoLink, critique, time, timestamp) VALUES ($1, $2, $3, $4) RETURNING *',
+      [videoLink, critique, time, timestamp]
     );
     res.json({ message: 'success', data: result.rows[0] });
   } catch (err) {
-    console.error('Error adding note:', err);
+    console.error('Error adding critique:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-app.get('/notes', async (req, res) => {
-  const { videoLink } = req.query;
+app.post('/deleteCritique', async (req, res) => {
+  const { videoLink, time } = req.body;
   try {
-    const result = await pool.query('SELECT * FROM notes WHERE videoLink = $1', [videoLink]);
-    res.json({ data: result.rows });
+    await pool.query('DELETE FROM critiques WHERE videoLink = $1 AND time = $2', [videoLink, time]);
+    res.json({ message: 'success' });
   } catch (err) {
-    console.error('Error fetching notes:', err);
+    console.error('Error deleting critique:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.get('/critiques', async (req, res) => {
+  const { videoLink } = req.query;
+  try {
+    const result = await pool.query('SELECT * FROM critiques WHERE videoLink = $1', [videoLink]);
+    res.json({ data: result.rows });
+  } catch (err) {
+    console.error('Error fetching critiques:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 app.post('/reset', async (req, res) => {
   try {
