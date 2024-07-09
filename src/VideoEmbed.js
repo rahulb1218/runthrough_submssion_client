@@ -21,6 +21,7 @@ const VideoEmbed = () => {
 
   const handleAddNote = async () => {
     const currentTime = videoRef.current ? videoRef.current.currentTime : 0;
+    console.log('Current Time:', currentTime)
     const newNote = { text: noteText, time: currentTime };
     setNotes([...notes, newNote]);
     setNoteText('');
