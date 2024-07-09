@@ -16,11 +16,11 @@ const App = () => {
   const [selectedAssignment, setSelectedAssignment] = useState('');
 
   const fetchSubmissions = async () => {
-    console.log('Fetching submissions...');
+    // console.log('Fetching submissions...');
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submissions');
       const result = await response.json();
-      console.log('Submissions fetched:', result.data);
+      // console.log('Submissions fetched:', result.data);
       setSubmissions(result.data);
     } catch (error) {
       console.error('Error fetching submissions:', error);
@@ -28,11 +28,11 @@ const App = () => {
   };
 
   const fetchAssignments = async () => {
-    console.log('Fetching assignments...');
+    // console.log('Fetching assignments...');
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments');
       const result = await response.json();
-      console.log('Assignmendts fetched:', result.data);
+      // console.log('Assignmendts fetched:', result.data);
       setAssignments(result.data);
     } catch (error) {
       console.error('Error fetching assignments:', error);
@@ -40,14 +40,14 @@ const App = () => {
   };
 
   useEffect(() => {
-    console.log('useEffect - fetching data');
+    // console.log('useEffect - fetching data');
     fetchSubmissions();
     fetchAssignments();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting video link:', videolink, 'for dancer:', dancer, 'and assignment:', selectedAssignment);
+    // console.log('Submitting video link:', videolink, 'for dancer:', dancer, 'and assignment:', selectedAssignment);
     const formattedVideoLink = videolink.startsWith('http://') || videolink.startsWith('https://') ? videolink : `https://${videolink}`;
     try {
       await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submit', {
@@ -57,7 +57,7 @@ const App = () => {
         },
         body: JSON.stringify({ dancer, videolink: formattedVideoLink, assignment: selectedAssignment }),
       });
-      console.log('Video link submitted successfully');
+      // console.log('Video link submitted successfully');
       fetchSubmissions(); // Fetch submissions again to update the state
       setVideoLink('');
       setSelectedAssignment(''); // Clear the selected assignment
@@ -67,16 +67,16 @@ const App = () => {
   };
 
   const groupedSubmissions = submissions.reduce((acc, submission) => {
-    console.log('Processing submission:', submission); // Log each submission object
+    // console.log('Processing submission:', submission); // Log each submission object
     if (!acc[submission.dancer]) {
       acc[submission.dancer] = {};
     }
-    console.log('video link:', submission.videolink);
+    // console.log('video link:', submission.videolink);
     acc[submission.dancer][submission.assignment] = submission.videolink;
     return acc;
   }, {});
 
-  console.log('Grouped Submissions:', groupedSubmissions);
+  // console.log('Grouped Submissions:', groupedSubmissions);
 
   return (
     <Router>
@@ -114,8 +114,8 @@ const App = () => {
                   <ul>
                     {assignments.map((assignment) => {
                       const submission = groupedSubmissions[name]?.[assignment.assignment];
-                      console.log(`Submission for ${name}, assignment ${assignment.assignment}:`, submission);
-                      console.log('Submission:', groupedSubmissions)
+                      // console.log(`Submission for ${name}, assignment ${assignment.assignment}:`, submission);
+                      // console.log('Submission:', groupedSubmissions)
                       return (
                         <li key={assignment.assignment} style={{ backgroundColor: submission ? 'green' : 'red' }}>
                           {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
