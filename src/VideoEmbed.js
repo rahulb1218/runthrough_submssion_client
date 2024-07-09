@@ -96,10 +96,31 @@ const VideoEmbed = () => {
     }
   };
 
+  const handlePlayPause = () => {
+    if (playerRef.current.getPlayerState() === window.YT.PlayerState.PLAYING) {
+      playerRef.current.pauseVideo();
+    } else {
+      playerRef.current.playVideo();
+    }
+  };
+
+  const handleJumpForward = () => {
+    playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
+  };
+
+  const handleJumpBackward = () => {
+    playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
+  };
+
   return (
     <div className="video-embed">
       <h2>Video Submission</h2>
       <div id="youtube-player"></div>
+      <div className="media-controls">
+        <button onClick={handlePlayPause}>Play/Pause</button>
+        <button onClick={handleJumpBackward}>-5s</button>
+        <button onClick={handleJumpForward}>+5s</button>
+      </div>
       <div className="critiques-section">
         <input
           type="text"
