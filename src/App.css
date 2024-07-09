@@ -136,4 +136,7 @@
 .li {
   text-align: left;
 }
-
+.video-embed {
+  text-align: center;
+  margin: 20px;
+}
