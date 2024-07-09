@@ -87,8 +87,9 @@ const App = () => {
         <Route path="/admin" element={<AdminConsole />} />
         <Route path="/" element={
           <div className="app">
-          <h1 style={{ color: 'red' }}>Site Under Maintenance</h1>
-          <p style={{ color: 'red' }}>Please wait to submit runs later.</p>
+            <h1>Run Throughs</h1>
+          {/* <h1 style={{ color: 'red' }}>Site Under Maintenance</h1> */}
+          {/* <p style={{ color: 'red' }}>Please wait to submit runs later.</p> */}
             <form className="submission-form" onSubmit={handleSubmit}>
               <select value={dancer} onChange={(e) => setDancer(e.target.value)}>
                 {dancerNames.map((name) => (
