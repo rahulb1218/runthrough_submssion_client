@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import YouTube from 'react-youtube';
 
 const VideoEmbed = () => {
   const { videoLink } = useParams();
@@ -63,16 +64,10 @@ const VideoEmbed = () => {
   return (
     <div className="video-embed">
       <h2>Video Submission</h2>
-      <iframe
-        ref={videoRef}
-        width="560"
-        height="315"
-        src={embedUrl}
-        title="Video Submission"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-      ></iframe>
+      <YouTube
+        videoId={"O1_SKK0_jHU"}                 
+        className={"video"}               
+    />
       <div className="notes-section">
         <input
           type="text"
