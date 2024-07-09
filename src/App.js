@@ -84,7 +84,8 @@ const App = () => {
         <Route path="/admin" element={<AdminConsole />} />
         <Route path="/" element={
           <div className="app">
-            <img src="/logo.png" alt="Logo" className="logo" />
+          <h1 style={{ color: 'red' }}>Site Under Maintenance</h1>
+          <p style={{ color: 'red' }}>Please wait to submit runs later.</p>
             <form className="submission-form" onSubmit={handleSubmit}>
               <select value={dancer} onChange={(e) => setDancer(e.target.value)}>
                 {dancerNames.map((name) => (
