@@ -1,7 +1,5 @@
-// VideoEmbed.js
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
 
 const VideoEmbed = () => {
   const { videoLink } = useParams();
@@ -18,28 +16,15 @@ const VideoEmbed = () => {
     }
     return url;
   };
-  const fetchNotes = async () => {
-    try {
-      const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/notes?videoLink=${encodeURIComponent(decodedVideoLink)}`);
-      const result = await response.json();
-      setNotes(result.data);
-    } catch (error) {
-      console.error('Error fetching notes:', error);
-    }
-  };
-  
-  useEffect(() => {
-    fetchNotes();
-  }, []);
 
   const embedUrl = getEmbedUrl(decodedVideoLink);
 
   const handleAddNote = async () => {
-    const currentTime = videoRef.current.currentTime;
+    const currentTime = videoRef.current ? videoRef.current.currentTime : 0;
     const newNote = { text: noteText, time: currentTime };
     setNotes([...notes, newNote]);
     setNoteText('');
-  
+
     try {
       await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/addNote', {
         method: 'POST',
@@ -52,12 +37,27 @@ const VideoEmbed = () => {
       console.error('Error adding note:', error);
     }
   };
-  
 
   const handleTimeClick = (time) => {
-    videoRef.current.currentTime = time;
-    videoRef.current.play();
+    if (videoRef.current) {
+      videoRef.current.currentTime = time;
+      videoRef.current.play();
+    }
   };
+
+  const fetchNotes = async () => {
+    try {
+      const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/notes?videoLink=${encodeURIComponent(decodedVideoLink)}`);
+      const result = await response.json();
+      setNotes(result.data);
+    } catch (error) {
+      console.error('Error fetching notes:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotes();
+  }, []);
 
   return (
     <div className="video-embed">
@@ -83,7 +83,9 @@ const VideoEmbed = () => {
         <ul>
           {notes.map((note, index) => (
             <li key={index}>
-              <span onClick={() => handleTimeClick(note.time)}>{new Date(note.time * 1000).toISOString().substr(11, 8)}</span>
+              <span onClick={() => handleTimeClick(note.time)}>
+                {note.time !== undefined ? new Date(note.time * 1000).toISOString().substr(11, 8) : 'Invalid Time'}
+              </span>
               : {note.text}
             </li>
           ))}
