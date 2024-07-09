@@ -120,16 +120,17 @@ const App = () => {
                     console.log(`Submission for ${name}, assignment ${assignment.assignment}:`, submission);
                     return (
                       <li key={assignment.assignment} style={{ backgroundColor: submission ? 'green' : 'red' }}>
-                      {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
-                      {submission && (
-                        <>
-                        {' | '}
-                        <Link to={`/embed/${encodeURIComponent(submission)}`}>View</Link>
-                        </>
-                      )}
+                        {assignment.assignment}: {submission ? <a href={submission} target="_blank" rel="noopener noreferrer">Submitted</a> : 'Not submitted'}
+                        {submission && (
+                          <>
+                            {' | '}
+                            <Link to={`/embed/${encodeURIComponent(submission)}`}>View</Link>
+                          </>
+                        )}
                       </li>
                     );
                   })}
+
 
                   </ul>
                 </div>
