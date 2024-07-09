@@ -1,29 +1,48 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-
 const VideoEmbed = () => {
   const { videoLink } = useParams();
   const decodedVideoLink = decodeURIComponent(videoLink);
   const [notes, setNotes] = useState([]);
   const [noteText, setNoteText] = useState('');
-  const videoRef = useRef(null);
+  const playerRef = useRef(null);
 
-  const getEmbedUrl = (url) => {
+  const getVideoId = (url) => {
     const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = url.match(youtubeRegex);
-    if (match && match[1]) {
-      return `https://www.youtube.com/embed/${match[1]}`;
-    }
-    return url;
+    return match ? match[1] : null;
   };
 
-  const embedUrl = getEmbedUrl(decodedVideoLink);
+  const videoId = getVideoId(decodedVideoLink);
+
+  useEffect(() => {
+    if (window.YT) {
+      loadVideoPlayer();
+    } else {
+      window.onYouTubeIframeAPIReady = loadVideoPlayer;
+    }
+
+    function loadVideoPlayer() {
+      playerRef.current = new window.YT.Player('youtube-player', {
+        height: '315',
+        width: '560',
+        videoId: videoId,
+        events: {
+          onReady: onPlayerReady,
+        },
+      });
+    }
+
+    function onPlayerReady(event) {
+      // Player is ready
+    }
+
+    fetchNotes();
+  }, [videoId]);
 
   const handleAddNote = async () => {
-    
-    const currentTime = document.getElementById("video").getCurrentTime();
-    console.log('Current Time:', currentTime)
+    const currentTime = playerRef.current.getCurrentTime();
     const newNote = { text: noteText, time: currentTime };
     setNotes([...notes, newNote]);
     setNoteText('');
@@ -42,10 +61,8 @@ const VideoEmbed = () => {
   };
 
   const handleTimeClick = (time) => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = time;
-      videoRef.current.play();
-    }
+    playerRef.current.seekTo(time);
+    playerRef.current.playVideo();
   };
 
   const fetchNotes = async () => {
@@ -58,23 +75,10 @@ const VideoEmbed = () => {
     }
   };
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
   return (
     <div className="video-embed">
       <h2>Video Submission</h2>
-      <iframe
-        id={"video"}
-        width="560"
-        height="315"
-        src={embedUrl}
-        title="Video Submission"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-      ></iframe>
+      <div id="youtube-player"></div>
       <div className="notes-section">
         <input
           type="text"
