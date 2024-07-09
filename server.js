@@ -56,6 +56,14 @@ pool.connect((err, client, release) => {
       assignment TEXT,
       timestamp TIMESTAMP
     );
+    CREATE TABLE IF NOT EXISTS notes (
+      id SERIAL PRIMARY KEY,
+      videoLink TEXT,
+      note TEXT,
+      time FLOAT,
+      timestamp TIMESTAMP
+    );
+
   `, (err) => {
     release();
     if (err) {
@@ -111,6 +119,32 @@ app.post('/assignments', async (req, res) => {
     res.json({ message: 'success', data: result.rows[0] });
   } catch (err) {
     console.error('Error adding assignment:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/addNote', async (req, res) => {
+  const { videoLink, note, time } = req.body;
+  const timestamp = new Date().toISOString();
+  try {
+    const result = await pool.query(
+      'INSERT INTO notes (videoLink, note, time, timestamp) VALUES ($1, $2, $3, $4) RETURNING *',
+      [videoLink, note, time, timestamp]
+    );
+    res.json({ message: 'success', data: result.rows[0] });
+  } catch (err) {
+    console.error('Error adding note:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/notes', async (req, res) => {
+  const { videoLink } = req.query;
+  try {
+    const result = await pool.query('SELECT * FROM notes WHERE videoLink = $1', [videoLink]);
+    res.json({ data: result.rows });
+  } catch (err) {
+    console.error('Error fetching notes:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
