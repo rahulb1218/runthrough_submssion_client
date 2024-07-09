@@ -21,9 +21,8 @@ const VideoEmbed = () => {
   const embedUrl = getEmbedUrl(decodedVideoLink);
 
   const handleAddNote = async () => {
-    ytplayer = document.getElementById("video");
     
-    const currentTime = ytplayer.getCurrentTime();
+    const currentTime = document.getElementById("video").getCurrentTime();
     console.log('Current Time:', currentTime)
     const newNote = { text: noteText, time: currentTime };
     setNotes([...notes, newNote]);
