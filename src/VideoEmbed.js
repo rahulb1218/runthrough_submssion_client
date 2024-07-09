@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import YouTube from 'react-youtube';
+
 
 const VideoEmbed = () => {
   const { videoLink } = useParams();
@@ -21,7 +21,9 @@ const VideoEmbed = () => {
   const embedUrl = getEmbedUrl(decodedVideoLink);
 
   const handleAddNote = async () => {
-    const currentTime = this.props.player.youtubePlayer.getCurrentTime();
+    ytplayer = document.getElementById("video");
+    
+    const currentTime = ytplayer.getCurrentTime();
     console.log('Current Time:', currentTime)
     const newNote = { text: noteText, time: currentTime };
     setNotes([...notes, newNote]);
@@ -64,10 +66,16 @@ const VideoEmbed = () => {
   return (
     <div className="video-embed">
       <h2>Video Submission</h2>
-      <YouTube
-        videoId={"O1_SKK0_jHU"}                 
-        className={"video"}               
-    />
+      <iframe
+        id={"video"}
+        width="560"
+        height="315"
+        src={embedUrl}
+        title="Video Submission"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
       <div className="notes-section">
         <input
           type="text"
