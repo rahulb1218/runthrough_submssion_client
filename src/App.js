@@ -20,7 +20,7 @@ const App = () => {
     try {
       const response = await fetch('https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submissions');
       const result = await response.json();
-      // console.log('Submissions fetched:', result.data);
+      console.log('Submissions fetched:', result.data);
       setSubmissions(result.data);
     } catch (error) {
       console.error('Error fetching submissions:', error);
