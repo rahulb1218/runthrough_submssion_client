@@ -53,7 +53,7 @@ const VideoEmbed = () => {
     setCritiqueText('');
 
     try {
-      await fetch('${process.env.REACT_APP_API_URL}/addCritique', {
+      await fetch(`${process.env.react_app_api_url}/addCritique`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const VideoEmbed = () => {
   const handleDeleteCritique = async (index) => {
     const critiqueToDelete = critiques[index];
     try {
-      await fetch('${process.env.REACT_APP_API_URL}/deleteCritique', {
+      await fetch(`${process.env.react_app_api_url}/deleteCritique`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ const VideoEmbed = () => {
 
   const fetchCritiques = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/critiques?videoLink=${encodeURIComponent(decodedVideoLink)}`);
+      const response = await fetch(`${process.env.react_app_api_url}/critiques?videoLink=${encodeURIComponent(decodedVideoLink)}`);
       const result = await response.json();
       setCritiques(result.data);
     } catch (error) {

@@ -20,10 +20,9 @@ const App = () => {
   const [selectedAssignment, setSelectedAssignment] = useState('');
 
   const fetchSubmissions = async () => {
-    console.log('Fetching submissions...');
-    console.log('API URL:', process.env.REACT_APP_API_URL);
+    // console.log('Fetching submissions...');
     try {
-      const response = await fetch('${process.env.REACT_APP_API_URL}/submissions');
+      const response = await fetch(`${process.env.react_app_api_url}/submissions`);
       const result = await response.json();
       console.log('Submissions fetched:', result.data);
       setSubmissions(result.data);
@@ -35,7 +34,7 @@ const App = () => {
   const fetchAssignments = async () => {
     // console.log('Fetching assignments...');
     try {
-      const response = await fetch('${process.env.REACT_APP_API_URL}/assignments');
+      const response = await fetch(`${process.env.react_app_api_url}/assignments`);
       const result = await response.json();
       // console.log('Assignmendts fetched:', result.data);
       setAssignments(result.data);
@@ -55,7 +54,7 @@ const App = () => {
     // console.log('Submitting video link:', videolink, 'for dancer:', dancer, 'and assignment:', selectedAssignment);
     const formattedVideoLink = videolink.startsWith('http://') || videolink.startsWith('https://') ? videolink : `https://${videolink}`;
     try {
-      await fetch('${process.env.REACT_APP_API_URL}/submit', {
+      await fetch(`${process.env.react_app_api_url}/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

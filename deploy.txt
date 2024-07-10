@@ -1,4 +1,4 @@
- const response = await fetch('${process.env.REACT_APP_API_URL}/submissions');
- await fetch('${process.env.REACT_APP_API_URL}/submit', {
+ const response = await fetch('${process.env.react_app_api_url}/submissions');
+ await fetch('${process.env.react_app_api_url}/submit', {
 
 
