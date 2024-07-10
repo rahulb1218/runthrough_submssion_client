@@ -32,7 +32,7 @@ const App = () => {
   };
 
   const fetchAssignments = async () => {
-    // console.log('Fetching assignments...');
+    console.log('Fetching assignments...');
     try {
       const response = await fetch(`${process.env.react_app_api_url}/assignments`);
       const result = await response.json();
