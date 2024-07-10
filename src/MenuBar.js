@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './MenuBar.css';
+import './App.css';
 
 const MenuBar = () => {
   const [isOpen, setIsOpen] = useState(false);
