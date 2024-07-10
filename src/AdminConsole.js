@@ -15,7 +15,7 @@ const AdminConsole = () => {
   const fetchAssignments = async () => {
     console.log('Fetching assignment in AdminConsole...');
     try {
-      const response = await fetch(`${process.env.react_app_api_url}/assignments`);
+      const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments`);
       const result = await response.json();
       console.log('Assignments fetched in AdminConsole:', result.data);
       setAssignments(result.data);
@@ -27,7 +27,7 @@ const AdminConsole = () => {
   const handleAddAssignment = async () => {
     console.log('Adding new assignment:', newAssignment);
     try {
-      await fetch(`${process.env.react_app_api_url}/assignments`, {
+      await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const AdminConsole = () => {
   const handleReset = async () => {
     console.log('Resetting assignments and submissions');
     try {
-      await fetch(`${process.env.react_app_api_url}/reset`, {
+      await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/reset`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

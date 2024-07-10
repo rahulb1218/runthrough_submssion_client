@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   'http://localhost:3000',
   'https://boiling-sea-64676.herokuapp.com',
-  `${process.env.react_app_api_url}`
+  `https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com`
 ];
 
 app.use(cors({

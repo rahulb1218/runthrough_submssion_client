@@ -20,10 +20,10 @@ const App = () => {
   const [selectedAssignment, setSelectedAssignment] = useState('');
 
   const fetchSubmissions = async () => {
-    console.log(`Fetching submissions from ${process.env.react_app_api_url}/submissions`);
+    console.log(`Fetching submissions from https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submissions`);
     
     try {
-      const response = await fetch(`${process.env.react_app_api_url}/submissions`);
+      const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submissions`);
       const result = await response.json();
       console.log('Submissions fetched:', result.data);
       setSubmissions(result.data);
@@ -35,7 +35,7 @@ const App = () => {
   const fetchAssignments = async () => {
     console.log('Fetching assignments...');
     try {
-      const response = await fetch(`${process.env.react_app_api_url}/assignments`);
+      const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/assignments`);
       const result = await response.json();
       // console.log('Assignmendts fetched:', result.data);
       setAssignments(result.data);
@@ -55,7 +55,7 @@ const App = () => {
     // console.log('Submitting video link:', videolink, 'for dancer:', dancer, 'and assignment:', selectedAssignment);
     const formattedVideoLink = videolink.startsWith('http://') || videolink.startsWith('https://') ? videolink : `https://${videolink}`;
     try {
-      await fetch(`${process.env.react_app_api_url}/submit`, {
+      await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

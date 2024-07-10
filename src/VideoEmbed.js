@@ -53,7 +53,7 @@ const VideoEmbed = () => {
     setCritiqueText('');
 
     try {
-      await fetch(`${process.env.react_app_api_url}/addCritique`, {
+      await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/addCritique`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const VideoEmbed = () => {
   const handleDeleteCritique = async (index) => {
     const critiqueToDelete = critiques[index];
     try {
-      await fetch(`${process.env.react_app_api_url}/deleteCritique`, {
+      await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/deleteCritique`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ const VideoEmbed = () => {
 
   const fetchCritiques = async () => {
     try {
-      const response = await fetch(`${process.env.react_app_api_url}/critiques?videoLink=${encodeURIComponent(decodedVideoLink)}`);
+      const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/critiques?videoLink=${encodeURIComponent(decodedVideoLink)}`);
       const result = await response.json();
       setCritiques(result.data);
     } catch (error) {
