@@ -20,7 +20,8 @@ const App = () => {
   const [selectedAssignment, setSelectedAssignment] = useState('');
 
   const fetchSubmissions = async () => {
-    // console.log('Fetching submissions...');
+    console.log('Fetching submissions...');
+    console.log('API URL:', process.env.REACT_APP_API_URL);
     try {
       const response = await fetch('${process.env.REACT_APP_API_URL}/submissions');
       const result = await response.json();
