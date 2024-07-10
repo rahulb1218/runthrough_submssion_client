@@ -1,10 +1,16 @@
 /* src/App.css */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #13141c;
+  color: white;
+}
 .app {
   text-align: center;
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #050022;
+  background-color: #13141c;
   color: white;
+  padding-top: 100px;
 }
 
 .submission-form {
@@ -138,20 +144,25 @@
 }
 .video-embed {
   text-align: center;
-  margin: 20px;
   max-width: 100%;
+  padding-top: 100px;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 iframe {
   width: 100%;
   border: none;
+  height: 50%;
 }
 .menu-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 10px;
-  background-color: #333;
+  background-color: #13141c;
   color: white;
+  position: fixed;
+  width: 100%;
+  height: 50px;
 }
 
 .menu-button {
@@ -160,17 +171,20 @@ iframe {
   border: none;
   color: white;
   cursor: pointer;
+  justify-self: left;
+  margin-right: auto;
 }
 
 .menu-heading {
-  margin: 0;
+  text-align: center;
+  flex-grow: 1;
 }
 
 .side-menu {
   position: fixed;
   top: 0;
-  left: -250px;
-  width: 250px;
+  left: -300px;
+  width: 100px;
   height: 100%;
   background-color: #333;
   color: white;
@@ -188,4 +202,109 @@ iframe {
   border: none;
   color: white;
   cursor: pointer;
+}
+
+.side-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.side-menu li {
+  margin: 15px 0;
+}
+
+.side-menu a {
+  color: white;
+  text-decoration: none;
+}
+
+
+.side-menu.open {
+  left: 0;
+}
+
+.close-button {
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+.media-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.jump-forward {
+  width: 100%;
+  height: 50px;
+}
+.jump-backward {
+  width: 100%;
+  height: 50px;
+}
+.play-pause {
+  width: 100%;
+  height: 50px;
+} 
+.critiques-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.critique-input {
+  height: 30px;
+  font-size: 18px;
+  width: 80%;
+}
+.add-critique {
+  height: 30px;
+  font-size: 18px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 20%;
+}
+
+.critiques-list {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #62678a;
+}
+
+.delete-critique {
+  margin-right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff4d4d;
+  font-size: 1.2em;
+
+}
+
+.critique-timestamp {
+  margin-right: 10px;
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+.critiques-list span, .critiques-list button {
+  text-align: left;
+}
+.critiques-ul {
+  padding: 0;
 }

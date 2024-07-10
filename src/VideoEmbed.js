@@ -1,5 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { FaCirclePlay } from "react-icons/fa6";
+import { FaForward } from "react-icons/fa6";
+import { FaBackward } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 const VideoEmbed = () => {
   const { videoLink } = useParams();
@@ -47,21 +51,23 @@ const VideoEmbed = () => {
   }, [videoId]);
 
   const handleAddCritique = async () => {
-    const currentTime = playerRef.current.getCurrentTime();
-    const newCritique = { text: critiqueText, time: currentTime };
-    setCritiques([...critiques, newCritique]);
-    setCritiqueText('');
+    if (playerRef.current && playerRef.current.getCurrentTime) {
+      const currentTime = playerRef.current.getCurrentTime();
+      const newCritique = { text: critiqueText, time: currentTime };
+      setCritiques([...critiques, newCritique]);
+      setCritiqueText('');
 
-    try {
-      await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/addCritique`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ videoLink: decodedVideoLink, critique: critiqueText, time: currentTime }),
-      });
-    } catch (error) {
-      console.error('Error adding critique:', error);
+      try {
+        await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/addCritique`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ videoLink: decodedVideoLink, critique: critiqueText, time: currentTime }),
+        });
+      } catch (error) {
+        console.error('Error adding critique:', error);
+      }
     }
   };
 
@@ -82,14 +88,17 @@ const VideoEmbed = () => {
   };
 
   const handleTimeClick = (time) => {
-    playerRef.current.seekTo(time);
-    playerRef.current.playVideo();
+    if (playerRef.current && playerRef.current.seekTo) {
+      playerRef.current.seekTo(time);
+      playerRef.current.playVideo();
+    }
   };
 
   const fetchCritiques = async () => {
     try {
       const response = await fetch(`https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com/critiques?videoLink=${encodeURIComponent(decodedVideoLink)}`);
       const result = await response.json();
+      console.log('Critiques fetched:', result.data);
       setCritiques(result.data);
     } catch (error) {
       console.error('Error fetching critiques:', error);
@@ -97,49 +106,68 @@ const VideoEmbed = () => {
   };
 
   const handlePlayPause = () => {
-    if (playerRef.current.getPlayerState() === window.YT.PlayerState.PLAYING) {
-      playerRef.current.pauseVideo();
-    } else {
-      playerRef.current.playVideo();
+    if (playerRef.current && playerRef.current.getPlayerState) {
+      if (playerRef.current.getPlayerState() === window.YT.PlayerState.PLAYING) {
+        playerRef.current.pauseVideo();
+      } else {
+        playerRef.current.playVideo();
+      }
     }
   };
 
   const handleJumpForward = () => {
-    playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
+    if (playerRef.current && playerRef.current.seekTo) {
+      playerRef.current.seekTo(playerRef.current.getCurrentTime() + 5);
+    }
   };
 
   const handleJumpBackward = () => {
-    playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
+    if (playerRef.current && playerRef.current.seekTo) {
+      playerRef.current.seekTo(playerRef.current.getCurrentTime() - 5);
+    }
   };
 
   return (
     <div className="video-embed">
-      <h2>Video Submission</h2>
       <div id="youtube-player"></div>
       <div className="media-controls">
-        <button onClick={handlePlayPause}>Play/Pause</button>
-        <button onClick={handleJumpBackward}>-5s</button>
-        <button onClick={handleJumpForward}>+5s</button>
+        <button className="jump-backward" onClick={handleJumpBackward}>
+          <FaBackward />
+        </button>
+        <button className="play-pause" onClick={handlePlayPause}>
+          <FaCirclePlay />
+        </button>
+        <button className="jump-forward" onClick={handleJumpForward}>
+          <FaForward />
+        </button>
       </div>
-      <div className="critiques-section">
-        <input
-          type="text"
-          placeholder="Add a critique"
-          value={critiqueText}
-          onChange={(e) => setCritiqueText(e.target.value)}
-        />
-        <button onClick={handleAddCritique}>Add Critique</button>
-        <ul>
-          {critiques.map((critique, index) => (
-            <li key={index}>
-              <span onClick={() => handleTimeClick(critique.time)}>
-                {critique.time !== undefined ? new Date(critique.time * 1000).toISOString().substr(11, 8) : 'Invalid Time'}
-              </span>
-              : {critique.text}
-              <button onClick={() => handleDeleteCritique(index)}>Delete</button>
+      <div>
+        <div className="critiques-section">
+          <input
+            type="text"
+            placeholder="Add a critique"
+            value={critiqueText}
+            onChange={(e) => setCritiqueText(e.target.value)}
+            className="critique-input"
+          />
+          <button className="add-critique" onClick={handleAddCritique}>Add</button>
+        </div>
+        <ul className='critiques-ul'>
+    {critiques.map((critique, index) => {
+        console.log('Critique:', critique); // Debugging log
+        return (
+            <li className='critiques-list' key={index}>
+                <button className='delete-critique' onClick={() => handleDeleteCritique(index)}>
+                    <FaCircleXmark />
+                </button>
+                <span className='critique-timestamp' onClick={() => handleTimeClick(critique.time)}>
+                    {critique.time !== undefined ? new Date(critique.time * 1000).toISOString().substr(11, 8) : 'Invalid Time'}
+                </span>
+                : {critique.critique}
             </li>
-          ))}
-        </ul>
+        );
+    })}
+</ul>
       </div>
     </div>
   );
