@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import AdminConsole from './AdminConsole';
 import './App.css';
 import VideoEmbed from './VideoEmbed';
+import MenuBar from './MenuBar';
+
 
 
 const dancerNames = [
@@ -82,6 +84,7 @@ const App = () => {
 
   return (
     <Router>
+      <MenuBar />
       <Routes>
         <Route path="/embed/:videoLink" element={<VideoEmbed />} />
         <Route path="/admin" element={<AdminConsole />} />
