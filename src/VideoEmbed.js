@@ -68,6 +68,7 @@ const VideoEmbed = () => {
       } catch (error) {
         console.error('Error adding critique:', error);
       }
+      fetchCritiques();
     }
   };
 
