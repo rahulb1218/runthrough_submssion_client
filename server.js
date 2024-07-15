@@ -12,6 +12,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://boiling-sea-64676.herokuapp.com',
   `https://boiling-sea-64676-b8976c1f4ca6.herokuapp.com`
+  `http://10.0.0.151:3000`
 ];
 
 app.use(cors({
